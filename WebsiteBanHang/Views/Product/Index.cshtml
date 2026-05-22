@@ -1,0 +1,265 @@
+﻿@model IEnumerable<WebsiteBanHang.Models.Product>
+@{
+    ViewData["Title"] = "Cửa Hàng Âm Nhạc";
+    var categories = ViewBag.Categories as IEnumerable<WebsiteBanHang.Models.Category>;
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+    <div class="row align-items-center g-3">
+        <div class="col-lg-4">
+            <h3 class="fw-bold text-dark mb-1">
+                <i class="bi bi-music-note-beamed text-warning me-2"></i>Melodia Store
+            </h3>
+            <p class="text-muted small mb-0">Không gian mua sắm âm nhạc đỉnh cao</p>
+        </div>
+
+        <div class="col-md-8 col-lg-6">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0 rounded-start-pill text-muted ps-3">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="liveSearchInput" class="form-control bg-light border-0 pt-2 pb-2 rounded-end-pill"
+                       placeholder="Tìm kiếm nhanh sản phẩm..." onkeyup="filterProducts()" />
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-2 text-md-end d-flex gap-2 justify-content-md-end">
+            <button class="btn btn-outline-danger rounded-pill px-3 position-relative w-100" onclick="toggleWishlistModal()">
+                <i class="bi bi-heart-fill me-1"></i> Yêu Thích
+                <span id="wishlistCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-3 text-center bg-light rounded-4 p-3 border border-light-subtle">
+        <div class="col-6 col-md-3">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-truck text-warning fs-4"></i>
+                <div class="text-start"><p class="mb-0 fw-bold small">Giao Hỏa Tốc</p><span class="text-muted small-75">Nội thành 2h</span></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-shield-check text-success fs-4"></i>
+                <div class="text-start"><p class="mb-0 fw-bold small">Chính Hãng 100%</p><span class="text-muted small-75">Đền gấp 10 lần</span></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-arrow-left-right text-primary fs-4"></i>
+                <div class="text-start"><p class="mb-0 fw-bold small">Đổi Trả 30 Ngày</p><span class="text-muted small-75">Thủ tục dễ dàng</span></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-wrench-adjustable text-danger fs-4"></i>
+                <div class="text-start"><p class="mb-0 fw-bold small">Bảo Trì Trọn Đời</p><span class="text-muted small-75">Miễn phí căn chỉnh</span></div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="text-muted my-3">
+
+    <div class="row align-items-center g-3">
+        <div class="col-lg-9">
+            <div class="d-flex flex-wrap gap-2" id="categoryTabs">
+                <button class="btn btn-warning rounded-pill px-3 btn-sm fw-bold active-filter" data-category-id="all" onclick="selectCategory(this)">
+                    TẤT CẢ
+                </button>
+                @if (categories != null)
+                {
+                    foreach (var cat in categories)
+                    {
+                        <button class="btn btn-outline-secondary rounded-pill px-3 btn-sm fw-bold" data-category-id="@cat.Id" onclick="selectCategory(this)">
+                            @cat.Name.ToUpper()
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-lg-3 text-lg-end">
+            <select id="priceSorter" class="form-select form-select-sm rounded-pill bg-light border-0" onchange="sortProducts()">
+                <option value="default">Sắp xếp: Mặc định</option>
+                <option value="lowToHigh">Giá: Thấp đến Cao</option>
+                <option value="highToLow">Giá: Cao đến Thấp</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="productGrid">
+    @foreach (var item in Model)
+    {
+        <div class="col product-item-container" data-id="@item.Id" data-name="@item.Name.ToLower()" data-category="@item.CategoryId" data-price="@item.Price">
+            <div class="card h-100 product-card shadow-sm border-0 rounded-4 bg-white position-relative overflow-hidden">
+
+                <button class="btn-wishlist position-absolute top-0 end-0 m-2 z-3 border-0 bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center"
+                        onclick="toggleWishlist('@item.Id', '@item.Name', '@item.ImageUrl')" style="width: 35px; height: 35px;">
+                    <i class="bi bi-heart text-muted" id="heart-@item.Id"></i>
+                </button>
+
+                <div class="position-relative">
+                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" : item.ImageUrl)"
+                         class="card-img-top rounded-top-4" style="height: 180px; object-fit: cover;" alt="@item.Name">
+
+                    @if (item.IsFeatured)
+                    {
+                        <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-0.5 m-2 rounded small fw-bold shadow-sm" style="font-size: 0.75rem;">
+                            HOT SELLING
+                        </span>
+                    }
+                    <span class="position-absolute bottom-0 start-0 bg-dark text-white opacity-75 px-2 py-0.5 m-2 rounded small" style="font-size: 0.75rem;">
+                        @(categories != null ? categories.FirstOrDefault(c => c.Id == item.CategoryId)?.Name : "Nhạc cụ")
+                    </span>
+                </div>
+
+                <div class="card-body d-flex flex-column p-3">
+                    <h6 class="card-title fw-bold text-truncate mb-1" title="@item.Name">@item.Name</h6>
+
+                    <div class="d-flex align-items-center gap-1 mb-2" style="font-size: 0.8rem;">
+                        <span class="text-warning"><i class="bi bi-star-fill"></i> @item.Rating</span>
+                        <span class="text-muted">| Đã bán @(item.SalesCount > 0 ? item.SalesCount : 12)</span>
+                    </div>
+
+                    <div class="mb-2" style="font-size: 0.8rem;">
+                        @if (item.Stock <= 3)
+                        {
+                            <span class="text-danger fw-bold"><i class="bi bi-exclamation-circle-fill"></i> Chỉ còn @item.Stock cây cuối!</span>
+                        }
+                        else
+                        {
+                            <span class="text-success"><i class="bi bi-check-circle-fill"></i> Còn hàng (@item.Stock)</span>
+                        }
+                    </div>
+
+                    <p class="card-text text-muted small flex-grow-1 mb-2 text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 35px;">
+                        @(string.IsNullOrEmpty(item.Description) ? "Mô tả nhạc cụ chất lượng cao từ Melodia Studio." : item.Description)
+                    </p>
+
+                    <div class="mt-auto mb-2">
+                        <span class="text-danger fw-bold fs-5">@item.Price.ToString("#,##0") đ</span>
+                    </div>
+
+                    <a class="btn btn-dark btn-sm w-100 rounded-pill py-2" asp-action="Display" asp-route-id="@item.Id">
+                        <i class="bi bi-eye me-1"></i> Xem Chi Tiết Nhạc Cụ
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="wishlistModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header bg-danger text-white rounded-top-4">
+                <h5 class="modal-title fw-bold"><i class="bi bi-heart-fill me-2"></i>Nhạc cụ yêu thích của bạn</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3" id="wishlistItemsContainer"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let selectedCategoryId = "all";
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateWishlistUI();
+        });
+
+        function selectCategory(btn) {
+            document.querySelectorAll("#categoryTabs .btn").forEach(b => b.classList.remove("btn-warning", "active-filter").classList.add("btn-outline-secondary"));
+            btn.classList.remove("btn-outline-secondary"); btn.classList.add("btn-warning", "active-filter");
+            selectedCategoryId = btn.getAttribute("data-category-id");
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const keyword = document.getElementById("liveSearchInput").value.toLowerCase().trim();
+            document.querySelectorAll(".product-item-container").forEach(card => {
+                const matchesSearch = card.getAttribute("data-name").includes(keyword);
+                const matchesCategory = (selectedCategoryId === "all" || card.getAttribute("data-category") === selectedCategoryId);
+                if (matchesSearch && matchesCategory) card.classList.remove("d-none"); else card.classList.add("d-none");
+            });
+        }
+
+        function sortProducts() {
+            const sortType = document.getElementById("priceSorter").value;
+            const grid = document.getElementById("productGrid");
+            const products = Array.from(grid.querySelectorAll(".product-item-container"));
+            if (sortType === "default") return;
+            products.sort((a, b) => {
+                const priceA = parseFloat(a.getAttribute("data-price"));
+                const priceB = parseFloat(b.getAttribute("data-price"));
+                return sortType === "lowToHigh" ? priceA - priceB : priceB - priceA;
+            });
+            products.forEach(p => grid.appendChild(p));
+        }
+
+        function getWishlist() {
+            return JSON.parse(localStorage.getItem("melodia_wishlist")) || [];
+        }
+
+        function toggleWishlist(id, name, img) {
+            let wishlist = getWishlist();
+            const index = wishlist.findIndex(item => item.id === id);
+            if (index > -1) { wishlist.splice(index, 1); } else { wishlist.push({ id, name, img }); }
+            localStorage.setItem("melodia_wishlist", JSON.stringify(wishlist));
+            updateWishlistUI();
+        }
+
+        function updateWishlistUI() {
+            let wishlist = getWishlist();
+            document.getElementById("wishlistCount").innerText = wishlist.length;
+            document.querySelectorAll(".product-item-container").forEach(card => {
+                const id = card.getAttribute("data-id");
+                const heart = document.getElementById(`heart-${id}`);
+                if (heart) {
+                    if (wishlist.some(item => item.id === id)) {
+                        heart.className = "bi bi-heart-fill text-danger";
+                    } else {
+                        heart.className = "bi bi-heart text-muted";
+                    }
+                }
+            });
+        }
+
+        function toggleWishlistModal() {
+            let wishlist = getWishlist();
+            let container = document.getElementById("wishlistItemsContainer");
+            container.innerHTML = "";
+            if (wishlist.length === 0) {
+                container.innerHTML = `<p class="text-center text-muted my-3">Danh sách trống trơn.</p>`;
+            } else {
+                wishlist.forEach(item => {
+                    container.innerHTML += `
+                                <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="${item.img || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500'}" style="width: 45px; height: 45px; object-fit: cover;" class="rounded">
+                                        <span class="fw-bold text-dark small text-truncate" style="max-width: 220px;">${item.name}</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="toggleWishlist('${item.id}'); toggleWishlistModal();">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>`;
+                });
+            }
+            new bootstrap.Modal(document.getElementById('wishlistModal')).show();
+        }
+    </script>
+    <style>
+        .small-75 {
+            font-size: 0.72rem;
+        }
+
+        .btn-wishlist {
+            transition: transform 0.2s ease;
+        }
+
+            .btn-wishlist:hover {
+                transform: scale(1.15);
+            }
+    </style>
+}

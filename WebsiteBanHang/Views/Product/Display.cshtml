@@ -1,0 +1,135 @@
+﻿@model WebsiteBanHang.Models.Product
+@{
+    ViewData["Title"] = Model.Name + " - Melodia Studio";
+    var categories = ViewBag.Categories as IEnumerable<WebsiteBanHang.Models.Category>;
+    var relatedProducts = ViewBag.RelatedProducts as IEnumerable<WebsiteBanHang.Models.Product>;
+}
+
+<div class="container mt-5 text-dark">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white mb-5">
+        <div class="row g-0">
+            <div class="col-md-6 bg-light d-flex align-items-center justify-content-center p-4 position-relative" style="min-height: 400px;">
+                <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" : Model.ImageUrl)"
+                     class="img-fluid rounded-3 shadow-sm" style="max-height: 400px; object-fit: contain;" alt="@Model.Name" />
+            </div>
+
+            <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+                <div>
+                    <span class="badge bg-dark px-3 py-2 rounded-pill mb-2">
+                        <i class="bi bi-tag-fill text-warning me-1"></i>
+                        @(categories != null ? categories.FirstOrDefault(c => c.Id == Model.CategoryId)?.Name : "Nhạc cụ")
+                    </span>
+
+                    <h2 class="fw-bold text-dark mb-2">@Model.Name</h2>
+
+                    <div class="d-flex align-items-center gap-2 mb-3" style="font-size: 0.9rem;">
+                        <span class="text-warning"><i class="bi bi-star-fill"></i> @Model.Rating / 5.0</span>
+                        <span class="text-muted">| Kho hàng: <b class="text-dark">@Model.Stock</b> sản phẩm</span>
+                    </div>
+
+                    <h3 class="text-danger fw-bold my-3">
+                        @Model.Price.ToString("#,##0") <span class="fs-6">VNĐ</span>
+                    </h3>
+
+                    <div class="bg-light rounded-3 p-3 my-3">
+                        <h6 class="fw-bold text-dark mb-2"><i class="bi bi-gear-wide-connected text-warning me-2"></i>Thông số kỹ thuật nhanh:</h6>
+                        <table class="table table-sm table-borderless mb-0 text-muted small">
+                            <tr><td style="width: 40%;">Thương hiệu sản xuất:</td><td class="text-dark fw-bold">Melodia Custom</td></tr>
+                            <tr><td>Tình trạng đóng gói:</td><td class="text-dark fw-bold">Mới nguyên hộp 100%</td></tr>
+                            <tr><td>Chế độ bảo hành:</td><td class="text-dark fw-bold">12 tháng chính hãng</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="my-3 border rounded-3 p-3 bg-white shadow-sm d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="vinyl-record" id="vinylDisc"><i class="bi bi-disc fs-2 text-secondary"></i></div>
+                            <div>
+                                <p class="mb-0 fw-bold small">Âm thanh thử nghiệm</p>
+                                <span class="text-muted small" style="font-size: 0.75rem;" id="audioStatus">Đang dừng...</span>
+                            </div>
+                        </div>
+                        <audio id="productAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+                        <button class="btn btn-sm btn-dark rounded-pill px-3" onclick="toggleAudio()" id="btnPlayAudio">
+                            <i class="bi bi-play-fill"></i> Phát thử
+                        </button>
+                    </div>
+
+                    <h6 class="fw-bold text-secondary mb-1">Mô tả sản phẩm:</h6>
+                    <p class="text-muted small lh-base">
+                        @(string.IsNullOrEmpty(Model.Description) ? "Sản phẩm âm nhạc cao cấp được phân phối chính hãng bởi chuỗi cửa hàng Melodia Studio trên toàn quốc." : Model.Description)
+                    </p>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-3 py-2 btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                    <button class="btn btn-warning text-dark fw-bold rounded-pill px-4 py-2 btn-sm flex-grow-1 shadow-sm" onclick="alert('Đã thêm sản phẩm thành công vào giỏ hàng!')">
+                        <i class="bi bi-bag-plus-fill me-2"></i>Đặt Mua Ngay
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (relatedProducts != null && relatedProducts.Any())
+    {
+        <div class="mt-5">
+            <h4 class="fw-bold text-dark mb-3"><i class="bi bi-collection-play me-2 text-danger"></i>Sản phẩm cùng danh mục liên quan</h4>
+            <div class="row row-cols-2 row-cols-md-4 g-3">
+                @foreach (var p in relatedProducts)
+                {
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden bg-white">
+                            <img src="@(string.IsNullOrEmpty(p.ImageUrl) ? "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" : p.ImageUrl)"
+                                 class="card-img-top" style="height: 120px; object-fit: cover;">
+                            <div class="card-body p-2 d-flex flex-column">
+                                <h6 class="card-title small fw-bold text-truncate mb-1">@p.Name</h6>
+                                <p class="text-danger small fw-bold mb-2">@p.Price.ToString("#,##0") đ</p>
+                                <a asp-action="Display" asp-route-id="@p.Id" class="btn btn-sm btn-light rounded-pill w-100 text-primary fw-bold" style="font-size: 0.75rem;">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    // Điều khiển bật tắt trình phát nhạc và xoay đĩa Vinyl mô phỏng phòng thu
+    function toggleAudio() {
+        const audio = document.getElementById("productAudio");
+        const btn = document.getElementById("btnPlayAudio");
+        const status = document.getElementById("audioStatus");
+        const disc = document.getElementById("vinylDisc");
+
+        if (audio.paused) {
+            audio.play();
+            btn.innerHTML = `<i class="bi bi-pause-fill"></i> Dừng`;
+            status.innerText = "Đang phát âm thanh mẫu...";
+            disc.style.animation = "spin 3s linear infinite";
+        } else {
+            audio.pause();
+            btn.innerHTML = `<i class="bi bi-play-fill"></i> Phát thử`;
+            status.innerText = "Đang dừng...";
+            disc.style.animation = "none";
+        }
+    }
+</script>
+
+<style>
+    /* Hiệu ứng tạo vòng quay đĩa nhạc */
+    @@keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .vinyl-record {
+        display: inline-block;
+        transition: transform 0.5s ease;
+    }
+</style>
