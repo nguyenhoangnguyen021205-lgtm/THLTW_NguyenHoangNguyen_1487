@@ -1,61 +1,95 @@
 ﻿@model WebsiteBanHang.Models.Product
 @{
-    ViewData["Title"] = "Chỉnh Sửa Thông Tin Nhạc Cụ";
+    ViewData["Title"] = "Sửa Nhạc Cụ";
 }
 
-<div class="container mt-5" style="max-width: 600px;">
-    <div class="card border-0 shadow rounded-4 p-4 bg-white">
-        <h3 class="fw-bold text-dark text-center mb-4"><i class="bi bi-pencil-square text-secondary me-2"></i>Chỉnh Sửa Nhạc Cụ</h3>
+<style>
+    .form-card {
+        background: #130a35;
+        border: 2px solid #ff007f;
+        border-radius: 20px;
+    }
 
-        <form asp-action="Update" method="post">
-            <input type="hidden" asp-for="Id" />
+    .form-label {
+        color: #00f0ff !important;
+        font-weight: 800;
+        font-size: 1.05rem;
+    }
 
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label fw-bold small text-muted">Tên sản phẩm nhạc cụ</label>
-                <input asp-for="Name" class="form-control rounded-3" />
-                <span asp-validation-for="Name" class="text-danger small"></span>
-            </div>
+    .custom-input {
+        background: #070417 !important;
+        color: #ffffff !important;
+        border: 1px solid #00f0ff !important;
+        font-weight: 600;
+        padding: 12px;
+    }
+</style>
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Price" class="form-label fw-bold small text-muted">Giá bán (VNĐ)</label>
-                    <input asp-for="Price" class="form-control rounded-3" type="number" />
-                    <span asp-validation-for="Price" class="text-danger small"></span>
+<div class="card form-card shadow p-4">
+    <h3 class="text-white fw-bold mb-4" style="font-family: 'Orbitron';">🛠️ CHỈNH SỬA THÔNG TIN NHẠC CỤ</h3>
+    <form asp-action="Update" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <div class="row g-4">
+            <div class="col-md-7">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Tên Nhạc Cụ</label>
+                    <input asp-for="Name" class="form-control custom-input rounded-3 text-white" />
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Stock" class="form-label fw-bold small text-muted">Số lượng tồn kho</label>
-                    <input asp-for="Stock" class="form-control rounded-3" type="number" min="0" />
-                    <span asp-validation-for="Stock" class="text-danger small"></span>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Price" class="form-label">Giá Bán</label>
+                        <input asp-for="Price" type="number" class="form-control custom-input rounded-3 text-white" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Stock" class="form-label">Số Lượng Kho</label>
+                        <input asp-for="Stock" type="number" class="form-control custom-input rounded-3 text-white" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CategoryId" class="form-label">Danh Mục</label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-select custom-input rounded-3 text-white"></select>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Mô Tả</label>
+                    <textarea asp-for="Description" class="form-control custom-input rounded-3 text-white" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Đường Dẫn Link Ảnh (URL hiện tại)</label>
+                    <input asp-for="ImageUrl" id="urlInput" class="form-control custom-input rounded-3 text-white" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Hoặc Tải Lên Tệp Ảnh Mới Để Thay Thế</label>
+                    <input type="file" name="imageFile" id="imageInput" class="form-control custom-input rounded-3 text-white" accept="image/*" />
+                </div>
+
+                <button type="submit" class="btn btn-warning fw-bold px-4 py-2 text-dark shadow mt-3">⚙️ Lưu Thay Đổi</button>
+                <a asp-action="Manage" class="btn btn-secondary fw-bold px-4 py-2 text-white ms-2 mt-3">Quay Lại</a>
+            </div>
+
+            <div class="col-md-5 d-flex flex-column align-items-center justify-content-start border-start border-secondary pt-2">
+                <label class="form-label mb-3 text-uppercase text-white fw-bold">Hình Ảnh Đang Hiển Thị</label>
+                <div class="border border-info rounded p-2 bg-black d-flex align-items-center justify-content-center shadow-lg" style="width: 300px; height: 300px; overflow: hidden;">
+                    <img id="previewImage" src="@Model.ImageUrl" alt="Product Image" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
                 </div>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="CategoryId" class="form-label fw-bold small text-muted">Danh mục nhạc cụ</label>
-                <select asp-for="CategoryId" class="form-select rounded-3" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
-                </select>
-                <span asp-validation-for="CategoryId" class="text-danger small"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="ImageUrl" class="form-label fw-bold small text-muted">Đường dẫn hình ảnh (URL)</label>
-                <input asp-for="ImageUrl" class="form-control rounded-3" />
-            </div>
-
-            <div class="mb-3 form-check form-switch">
-                <input asp-for="IsFeatured" class="form-check-input" type="checkbox">
-                <label asp-for="IsFeatured" class="form-check-label fw-bold small text-dark">Đặt làm sản phẩm bán chạy (HOT SELLING)</label>
-            </div>
-
-            <div class="mb-4">
-                <label asp-for="Description" class="form-label fw-bold small text-muted">Mô tả thông số chi tiết</label>
-                <textarea asp-for="Description" class="form-control rounded-3" rows="3"></textarea>
-                <span asp-validation-for="Description" class="text-danger small"></span>
-            </div>
-
-            <div class="d-flex gap-2">
-                <a asp-action="Manage" class="btn btn-outline-secondary rounded-pill w-100">Quay lại</a>
-                <button type="submit" class="btn btn-secondary text-white rounded-pill w-100 fw-bold">Cập nhật ngay</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('urlInput').addEventListener('input', function (e) {
+            if (e.target.value) document.getElementById('previewImage').src = e.target.value;
+        });
+        document.getElementById('imageInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) { document.getElementById('previewImage').src = e.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

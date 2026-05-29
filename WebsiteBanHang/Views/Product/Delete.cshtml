@@ -1,12 +1,34 @@
 ﻿@model WebsiteBanHang.Models.Product
-<h2>Are you sure you want to delete this?</h2>
-<div>
-    <h4>Name: @Model.Name</h4>
-    <h4>Price: @Model.Price</h4>
-    <h4>Description: @Model.Description</h4>
+
+@{
+    ViewData["Title"] = "Xác Nhận Xóa Nhạc Cụ";
+}
+
+<div class="card text-white border-danger shadow-lg rounded-4 p-4 mx-auto" style="max-width: 650px; background: rgba(30, 10, 30, 0.8); border: 2px solid #ff007f;">
+    <div class="text-center text-danger mb-4">
+        <i class="bi bi-shield-slash-fill" style="font-size: 5rem; text-shadow: 0 0 15px #ff007f;"></i>
+        <h2 class="fw-bold mt-2" style="font-family: 'Orbitron';">XÁC NHẬN XÓA SẢN PHẨM</h2>
+        <p class="text-white-50">Bạn có chắc chắn muốn gỡ bỏ hoàn toàn nhạc cụ này khỏi cơ sở dữ liệu thật SQL Server không?</p>
+    </div>
+
+    <div class="border rounded p-3 mb-4 bg-black border-secondary">
+        <div class="row align-items-center">
+            <div class="col-4 text-center">
+                <img src="@Model.ImageUrl" class="img-fluid rounded border border-info" style="max-height: 120px;" alt="thumb" />
+            </div>
+            <div class="col-8">
+                <h4 class="text-info fw-bold">@Model.Name</h4>
+                <div class="text-warning fw-bold fs-5 font-monospace">Giá trị: @Model.Price.ToString("#,##0") đ</div>
+                <span class="badge bg-danger mt-2">Số lượng tồn kho: @Model.Stock thiết bị</span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="d-flex gap-3 justify-content-center">
+            <button type="submit" class="btn btn-danger px-5 py-2 fw-bold shadow-lg" style="box-shadow: 0 0 15px #ff007f !important;">🔥 Xác Nhận Xóa</button>
+            <a asp-action="Manage" class="btn btn-outline-light px-4 py-2">Hủy Bỏ</a>
+        </div>
+    </form>
 </div>
-<form asp-action="DeleteConfirmed" method="post">
-    <input type="hidden" asp-for="Id" />
-    <input type="submit" value="Delete" class="btn btn-danger" /> |
-    <a asp-action="Index">Cancel</a>
-</form>

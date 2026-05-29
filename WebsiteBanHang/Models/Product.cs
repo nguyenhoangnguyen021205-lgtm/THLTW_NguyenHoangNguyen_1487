@@ -1,33 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace WebsiteBanHang.Models
 {
     public class Product
     {
-        [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Tên sản phẩm âm nhạc không được để trống")]
-        [StringLength(150, ErrorMessage = "Tên sản phẩm không được vượt quá 150 ký tự")]
-        public string Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Tên nhạc cụ không được để trống")]
+        [StringLength(100, ErrorMessage = "Tên nhạc cụ không quá 100 ký tự")]
+        public string? Name { get; set; }
 
-        [Required(ErrorMessage = "Giá sản phẩm là bắt buộc")]
-        [Range(1000, double.MaxValue, ErrorMessage = "Giá sản phẩm phải lớn hơn 1,000đ")]
+        // 🌟 FIX LỖI OVERFLOW: Chuyển đổi khoảng kiểm tra sang dạng double để không bị tràn Int32
+        [Range(1000.0, 1000000000.0, ErrorMessage = "Giá bán phải nằm trong khoảng từ 1,000 đ đến 1 tỷ đ")]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn danh mục phù hợp")]
-        public int CategoryId { get; set; }
-
-        [StringLength(500, ErrorMessage = "Mô tả ngắn không quá 500 ký tự")]
+        [Required(ErrorMessage = "Mô tả sản phẩm không được để trống")]
         public string? Description { get; set; }
 
         public string? ImageUrl { get; set; }
 
+        public int Stock { get; set; }
         public bool IsFeatured { get; set; }
+        public double Rating { get; set; } = 5.0;
+        public int SalesCount { get; set; } = 0;
 
-        // --- CÁC THUỘC TÍNH NÂNG CẤP MỚI ---
-        public int Stock { get; set; } = 10;          // Số lượng tồn kho (Mặc định là 10)
-        public double Rating { get; set; } = 5.0;      // Điểm đánh giá sao (Mặc định 5.0)
-        public int SalesCount { get; set; } = 0;       // Số lượng đã bán (Mặc định 0)
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
+
+        public List<ProductImage>? Images { get; set; }
     }
 }
