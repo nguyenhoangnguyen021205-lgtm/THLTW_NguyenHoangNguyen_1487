@@ -1,0 +1,68 @@
+@model IEnumerable<WebsiteBanHang.Models.Category>
+@{
+    ViewData["Title"] = "Quản Lý Danh Mục";
+}
+
+<style>
+    .admin-card {
+        background: rgba(30, 41, 59, 0.7) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(139, 92, 246, 0.4) !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    .manage-table th {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        border-bottom: 2px solid rgba(139, 92, 246, 0.5) !important;
+        padding: 15px !important;
+    }
+    .manage-table td {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+        padding: 15px !important;
+        color: var(--text-main);
+    }
+    .manage-table tbody tr:hover {
+        background-color: rgba(139, 92, 246, 0.05) !important;
+    }
+</style>
+
+<div class="card admin-card shadow-lg p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+        <div>
+            <h2 class="text-white m-0 brand-font">QUẢN LÝ DANH MỤC SẢN PHẨM</h2>
+        </div>
+        <a asp-action="Add" class="btn btn-success px-4 py-2 fw-bold text-white shadow rounded-3">
+            <i class="bi bi-plus-circle me-1"></i> Thêm Danh Mục
+        </a>
+    </div>
+
+    <table class="table align-middle manage-table mb-0" style="--bs-table-bg: transparent; --bs-table-color: white;">
+        <thead>
+            <tr>
+                <th class="text-info text-center" style="width: 100px;">ID</th>
+                <th class="text-info">Tên Danh Mục</th>
+                <th class="text-info text-center" style="width: 250px;">Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr style="background-color: transparent;">
+                    <td class="text-center fw-bold">@item.Id</td>
+                    <td class="fw-bold fs-5">@item.Name</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-2 fw-bold">
+                            <i class="bi bi-pencil-square"></i> Sửa
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger fw-bold shadow">
+                            <i class="bi bi-trash3"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

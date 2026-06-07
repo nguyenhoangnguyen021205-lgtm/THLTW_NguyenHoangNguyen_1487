@@ -1,0 +1,95 @@
+@model IEnumerable<WebsiteBanHang.Models.Order>
+@{
+    ViewData["Title"] = "Quản Lý Đơn Hàng";
+}
+
+<style>
+    .admin-card {
+        background: rgba(30, 41, 59, 0.7) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 0, 127, 0.4) !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    .manage-table th {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        border-bottom: 2px solid rgba(255, 0, 127, 0.5) !important;
+        padding: 15px !important;
+    }
+    .manage-table td {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+        padding: 15px !important;
+        color: var(--text-main);
+    }
+    .manage-table tbody tr:hover {
+        background-color: rgba(255, 0, 127, 0.05) !important;
+    }
+    .badge-status {
+        padding: 8px 12px;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="card admin-card shadow-lg p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+        <div>
+            <h2 class="text-white m-0 brand-font"><i class="bi bi-cart-check text-magenta me-2"></i>QUẢN LÝ ĐƠN HÀNG</h2>
+            <p class="text-white-50 mt-1 mb-0 small">Danh sách các đơn hàng (Dữ liệu thực từ hệ thống)</p>
+        </div>
+    </div>
+
+    <table class="table align-middle manage-table mb-0" style="--bs-table-bg: transparent; --bs-table-color: white;">
+        <thead>
+            <tr>
+                <th class="text-magenta" style="color: #ff007f;">Mã Đơn</th>
+                <th class="text-magenta" style="color: #ff007f;">Khách Hàng (Email)</th>
+                <th class="text-magenta" style="color: #ff007f;">Tổng Tiền</th>
+                <th class="text-magenta" style="color: #ff007f;">Ngày Đặt</th>
+                <th class="text-magenta text-center" style="color: #ff007f;">Trạng Thái</th>
+                <th class="text-magenta text-center" style="color: #ff007f;">Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(Model != null && Model.Any()) {
+                foreach (var item in Model)
+                {
+                    <tr style="background-color: transparent;">
+                        <td class="fw-bold font-monospace">@item.Id</td>
+                        <td class="fw-bold">@item.User?.Email</td>
+                        <td class="text-warning fw-bold font-monospace">@item.TotalPrice.ToString("#,##0") đ</td>
+                        <td class="text-white-50 small">@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            @if (item.Status == "Đã Thanh Toán")
+                            {
+                                <span class="badge badge-status bg-success bg-opacity-25 text-success border border-success">@item.Status</span>
+                            }
+                            else if (item.Status == "Đang Xử Lý")
+                            {
+                                <span class="badge badge-status bg-warning bg-opacity-25 text-warning border border-warning">@item.Status</span>
+                            }
+                            else if (item.Status == "Đã Giao Hàng")
+                            {
+                                <span class="badge badge-status bg-info bg-opacity-25 text-info border border-info">@item.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-status bg-danger bg-opacity-25 text-danger border border-danger">@item.Status</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-light px-3" onclick="alert('Đang xem chi tiết đơn hàng @item.Id')">
+                                Chi tiết
+                            </button>
+                        </td>
+                    </tr>
+                }
+            } else {
+                <tr><td colspan="6" class="text-center text-white-50 py-4">Chưa có đơn hàng nào trong hệ thống.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,147 @@
+@model IEnumerable<WebsiteBanHang.Models.Product>
+
+@{
+    ViewData["Title"] = "Quản Lý Hệ Thống";
+}
+
+<style>
+    /* BẢNG ĐIỀU KHIỂN SÁNG RÕ - CHỮ TRẮNG TOÀN BỘ KHÔNG LO BỊ MỜ ẨN */
+    .admin-card {
+        background: rgba(30, 41, 59, 0.7) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(139, 92, 246, 0.4) !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .text-force-white {
+        color: #f8fafc !important;
+        font-weight: 700 !important;
+    }
+
+    .text-gradient-cyan {
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        color: transparent !important;
+        font-weight: 800 !important;
+    }
+
+    .manage-table th {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        border-bottom: 2px solid rgba(139, 92, 246, 0.5) !important;
+        padding: 15px !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .manage-table td {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+        padding: 15px !important;
+        transition: background-color 0.3s ease;
+        color: var(--text-main);
+    }
+
+    .manage-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .manage-table tbody tr:hover {
+        background-color: rgba(139, 92, 246, 0.05) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .thumb-preview {
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        background: #000;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .manage-table tbody tr:hover .thumb-preview {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+    }
+
+    /* Định dạng lại các ô nhập liệu / text hiển thị rõ ràng */
+    .badge-stock {
+        font-size: 0.95rem !important;
+        font-weight: bold !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .btn-action-glow {
+        transition: all 0.3s ease;
+    }
+    .btn-action-glow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px currentColor;
+    }
+</style>
+
+<div class="card admin-card shadow-lg p-4">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 border-bottom border-secondary pb-3">
+        <div>
+            <h2 class="text-force-white m-0 brand-font" style="letter-spacing: 1px;">⚙️ CONSOLE ĐIỀU HÀNH KHO HÀNG</h2>
+            <p class="text-white-50 small m-0 fw-bold mt-1">Hệ thống quản lý thông tin, cập nhật sửa đổi nhạc cụ trực tiếp xuống cơ sở dữ liệu.</p>
+        </div>
+        <a href="@Url.Action("Add", "Product")" class="btn btn-success btn-lg px-4 py-2 rounded-3 fw-bold shadow border-2 border-white text-white">
+            <i class="bi bi-plus-circle-fill me-2"></i> THÊM NHẠC CỤ MỚI
+        </a>
+    </div>
+
+    <div class="table-responsive rounded-3">
+        <table class="table align-middle manage-table mb-0" style="--bs-table-bg: transparent; --bs-table-color: white;">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-gradient-cyan text-center" style="font-size: 0.85rem;">Hình Ảnh</th>
+                    <th scope="col" class="text-gradient-cyan" style="font-size: 0.85rem;">Tên Nhạc Cụ / Thiết Bị</th>
+                    <th scope="col" class="text-gradient-cyan" style="font-size: 0.85rem;">Giá Niêm Yết</th>
+                    <th scope="col" class="text-center text-gradient-cyan" style="font-size: 0.85rem;">Số Lượng Kho</th>
+                    <th scope="col" class="text-center text-gradient-cyan" style="font-size: 0.85rem;">Thao Tác Hệ Thống</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr style="background-color: transparent;">
+                        <td class="text-center">
+                            <img src="@item.ImageUrl" class="thumb-preview border border-info" alt="nhac-cu"
+                                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=100&q=80';">
+                        </td>
+                        <td>
+                            <span class="d-block text-force-white fw-bold mb-1" style="font-size: 1.05rem;">@item.Name</span>
+                            <span class="badge bg-black text-info border border-info px-2 py-1" style="font-size: 0.75rem;">@item.Category?.Name</span>
+                        </td>
+                        <td>
+                            <span class="text-gradient-cyan font-monospace fw-bold">@item.Price.ToString("#,##0") đ</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge @(item.Stock > 10 ? "bg-success text-white" : "bg-danger text-white") px-2 py-1" style="font-size: 0.8rem;">
+                                @item.Stock Thiết bị
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-2 fw-bold px-3">
+                                    <i class="bi bi-pencil-square"></i> Sửa
+                                </a>
+                                <a href="@Url.Action("Delete", "Product", new { id = item.Id })" class="btn btn-sm btn-danger text-white fw-bold shadow btn-action-glow"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa nhạc cụ này khỏi cơ sở dữ liệu SQL Server không?');">
+                                    <i class="bi bi-trash3"></i> Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

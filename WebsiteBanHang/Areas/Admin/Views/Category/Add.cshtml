@@ -1,0 +1,29 @@
+@model WebsiteBanHang.Models.Category
+@{
+    ViewData["Title"] = "Thêm Danh Mục";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow p-4" style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 20px;">
+            <h2 class="text-white fw-bold mb-4 brand-font"><i class="bi bi-plus-circle text-success me-2"></i>THÊM DANH MỤC MỚI</h2>
+            
+            <form asp-action="Add" method="post">
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label text-white fw-bold">Tên Danh Mục</label>
+                    <input asp-for="Name" class="form-control" style="background: rgba(15, 23, 42, 0.8); color: white; border: 1px solid rgba(148, 163, 184, 0.3);" placeholder="Nhập tên danh mục..." />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold">Hủy Bỏ</a>
+                    <button type="submit" class="btn btn-success px-4 fw-bold"><i class="bi bi-save me-1"></i> Lưu Danh Mục</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

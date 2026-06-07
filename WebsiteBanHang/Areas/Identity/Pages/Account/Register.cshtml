@@ -1,0 +1,82 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng Ký";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card form-card shadow p-4" style="background: rgba(30, 41, 59, 0.7) !important; backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.4) !important; border-radius: 20px;">
+                <h2 class="text-white fw-bold mb-4 brand-font text-center">TẠO TÀI KHOẢN MỚI</h2>
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label asp-for="Input.FirstName" class="form-label text-white fw-bold">First Name</label>
+                            <input asp-for="Input.FirstName" class="form-control custom-input rounded-3 text-white" aria-required="true" placeholder="First Name" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Input.LastName" class="form-label text-white fw-bold">Last Name</label>
+                            <input asp-for="Input.LastName" class="form-control custom-input rounded-3 text-white" aria-required="true" placeholder="Last Name" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label text-white fw-bold">Email</label>
+                        <input asp-for="Input.Email" class="form-control custom-input rounded-3 text-white" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label asp-for="Input.Password" class="form-label text-white fw-bold">Mật khẩu</label>
+                            <input asp-for="Input.Password" class="form-control custom-input rounded-3 text-white" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Input.ConfirmPassword" class="form-label text-white fw-bold">Xác nhận</label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control custom-input rounded-3 text-white" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Address" class="form-label text-white fw-bold">Địa chỉ</label>
+                        <input asp-for="Input.Address" class="form-control custom-input rounded-3 text-white" placeholder="123 Street, City" />
+                        <span asp-validation-for="Input.Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Input.Age" class="form-label text-white fw-bold">Tuổi</label>
+                        <input asp-for="Input.Age" class="form-control custom-input rounded-3 text-white" type="number" placeholder="20" />
+                        <span asp-validation-for="Input.Age" class="text-danger"></span>
+                    </div>
+
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-premium px-4 py-2 fs-5">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        .custom-input {
+            background: rgba(15, 23, 42, 0.8) !important;
+            color: #f8fafc !important;
+            border: 1px solid rgba(148, 163, 184, 0.3) !important;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        .custom-input:focus {
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3) !important;
+            background: rgba(15, 23, 42, 0.95) !important;
+        }
+    </style>
+}

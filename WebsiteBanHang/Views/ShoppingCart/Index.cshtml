@@ -1,0 +1,64 @@
+@model List<WebsiteBanHang.Models.CartItem>
+@{
+    ViewData["Title"] = "Giỏ Hàng";
+}
+
+<div class="container py-5 mt-5">
+    <h2 class="text-white fw-bold mb-4 brand-font"><i class="bi bi-cart3 text-info me-2"></i>GIỎ HÀNG CỦA BẠN</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert bg-dark border-info text-white-50 text-center py-5 rounded-4 shadow-lg">
+            <i class="bi bi-cart-x fs-1 mb-3 d-block text-secondary"></i>
+            <h4 class="fw-bold text-white mb-3">Giỏ hàng đang trống</h4>
+            <p>Vui lòng quay lại cửa hàng để chọn thêm sản phẩm.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-premium mt-3 px-4 rounded-pill">Khám phá Showroom</a>
+        </div>
+    }
+    else
+    {
+        <div class="card bg-dark border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead class="table-active">
+                    <tr>
+                        <th>Sản Phẩm</th>
+                        <th class="text-center">Đơn Giá</th>
+                        <th class="text-center">Số Lượng</th>
+                        <th class="text-center">Thành Tiền</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" : item.ImageUrl)" alt="@item.Name" class="rounded" style="width: 60px; height: 60px; object-fit: cover;" />
+                                    <span class="fw-bold">@item.Name</span>
+                                </div>
+                            </td>
+                            <td class="text-center">@item.Price.ToString("#,##0") đ</td>
+                            <td class="text-center fw-bold">@item.Quantity</td>
+                            <td class="text-center text-warning fw-bold">@item.Total.ToString("#,##0") đ</td>
+                            <td class="text-center">
+                                <a asp-action="RemoveFromCart" asp-route-productId="@item.ProductId" class="btn btn-sm btn-outline-danger rounded-circle" title="Xóa"><i class="bi bi-x-lg"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+            <div>
+                <span class="text-white-50 d-block mb-1">Tổng cộng:</span>
+                <h3 class="text-danger fw-bold m-0">@Model.Sum(x => x.Total).ToString("#,##0") đ</h3>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="ClearCart" class="btn btn-outline-secondary px-4 fw-bold rounded-pill">Xóa Giỏ Hàng</a>
+                <a asp-action="Checkout" class="btn btn-warning text-dark px-5 fw-bold rounded-pill shadow"><i class="bi bi-check-circle-fill me-2"></i>Thanh Toán</a>
+            </div>
+        </div>
+    }
+</div>

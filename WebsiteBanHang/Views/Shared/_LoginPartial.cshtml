@@ -1,0 +1,28 @@
+@using Microsoft.AspNetCore.Identity
+@using WebsiteBanHang.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav ms-2 gap-2 flex-row align-items-center">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a id="manage" class="nav-link text-info fw-bold py-1 px-2 small text-nowrap" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Chào, @UserManager.GetUserName(User)</a>
+    </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Product", new { area = "" })">
+            <button id="logout" type="submit" class="btn btn-sm btn-outline-danger fw-bold text-nowrap rounded-3"><i class="bi bi-box-arrow-right"></i> Thoát</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-white fw-bold py-1 px-2 small text-nowrap" id="register" asp-area="Identity" asp-page="/Account/Register">Đăng Ký</a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-sm btn-outline-info fw-bold text-nowrap rounded-3" id="login" asp-area="Identity" asp-page="/Account/Login">Đăng Nhập</a>
+    </li>
+}
+</ul>

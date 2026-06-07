@@ -1,32 +1,78 @@
-﻿@model WebsiteBanHang.Models.Product
+@model WebsiteBanHang.Models.Product
 @{
     ViewData["Title"] = "Sửa Nhạc Cụ";
 }
 
 <style>
     .form-card {
-        background: #130a35;
-        border: 2px solid #ff007f;
+        background: rgba(30, 41, 59, 0.7) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(139, 92, 246, 0.4) !important;
         border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     .form-label {
-        color: #00f0ff !important;
-        font-weight: 800;
+        color: #f8fafc !important;
+        font-weight: 700;
         font-size: 1.05rem;
+        margin-bottom: 0.5rem;
     }
 
     .custom-input {
-        background: #070417 !important;
-        color: #ffffff !important;
-        border: 1px solid #00f0ff !important;
-        font-weight: 600;
+        background: rgba(15, 23, 42, 0.8) !important;
+        color: #f8fafc !important;
+        border: 1px solid rgba(148, 163, 184, 0.3) !important;
+        font-weight: 500;
         padding: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-input:focus {
+        border-color: #8b5cf6 !important;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.3) !important;
+        background: rgba(15, 23, 42, 0.95) !important;
+        color: white !important;
+    }
+
+    /* Fix lỗi trình duyệt tự điền (autofill) làm ô nhập biến thành màu trắng */
+    .custom-input:-webkit-autofill,
+    .custom-input:-webkit-autofill:hover, 
+    .custom-input:-webkit-autofill:focus, 
+    .custom-input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px #0f172a inset !important;
+        -webkit-text-fill-color: #ffffff !important;
+        caret-color: #ffffff;
+        border: 1px solid #8b5cf6 !important;
+    }
+
+    .preview-container {
+        border: 2px dashed rgba(148, 163, 184, 0.5);
+        border-radius: 12px;
+        background: rgba(15, 23, 42, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .preview-container:hover {
+        border-color: #ec4899;
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+
+    #previewImage {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
     }
 </style>
 
 <div class="card form-card shadow p-4">
-    <h3 class="text-white fw-bold mb-4" style="font-family: 'Orbitron';">🛠️ CHỈNH SỬA THÔNG TIN NHẠC CỤ</h3>
+    <h3 class="text-white fw-bold mb-4 brand-font">✏️ CẬP NHẬT NHẠC CỤ</h3>
     <form asp-action="Update" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Id" />
         <div class="row g-4">
@@ -64,14 +110,14 @@
                     <input type="file" name="imageFile" id="imageInput" class="form-control custom-input rounded-3 text-white" accept="image/*" />
                 </div>
 
-                <button type="submit" class="btn btn-warning fw-bold px-4 py-2 text-dark shadow mt-3">⚙️ Lưu Thay Đổi</button>
+                <button type="submit" class="btn btn-premium px-4 py-2 mt-3"><i class="bi bi-cloud-upload me-2"></i> Cập Nhật</button>
                 <a asp-action="Manage" class="btn btn-secondary fw-bold px-4 py-2 text-white ms-2 mt-3">Quay Lại</a>
             </div>
 
             <div class="col-md-5 d-flex flex-column align-items-center justify-content-start border-start border-secondary pt-2">
-                <label class="form-label mb-3 text-uppercase text-white fw-bold">Hình Ảnh Đang Hiển Thị</label>
-                <div class="border border-info rounded p-2 bg-black d-flex align-items-center justify-content-center shadow-lg" style="width: 300px; height: 300px; overflow: hidden;">
-                    <img id="previewImage" src="@Model.ImageUrl" alt="Product Image" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+                <label class="form-label mb-3 text-uppercase fw-bold" style="color: #ffffff !important;">Hình Ảnh Đang Hiển Thị</label>
+                <div class="preview-container shadow-lg" style="width: 100%; aspect-ratio: 1/1; max-width: 400px;">
+                    <img id="previewImage" src="@Model.ImageUrl" alt="Product Image" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=500&q=80';" />
                 </div>
             </div>
         </div>

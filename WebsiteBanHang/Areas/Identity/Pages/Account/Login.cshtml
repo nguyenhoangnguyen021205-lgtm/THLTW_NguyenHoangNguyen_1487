@@ -1,0 +1,68 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng Nhập";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card form-card shadow p-4" style="background: rgba(30, 41, 59, 0.7) !important; backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.4) !important; border-radius: 20px;">
+                <h2 class="text-white fw-bold mb-4 brand-font text-center">ĐĂNG NHẬP</h2>
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label text-white fw-bold">Email</label>
+                        <input asp-for="Input.Email" class="form-control custom-input rounded-3 text-white" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="form-label text-white fw-bold">Mật khẩu</label>
+                        <input asp-for="Input.Password" class="form-control custom-input rounded-3 text-white" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="checkbox mb-4">
+                        <label asp-for="Input.RememberMe" class="form-label text-white">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <button id="login-submit" type="submit" class="w-100 btn btn-premium px-4 py-2 fs-5 mb-3">Đăng Nhập</button>
+                    </div>
+                    <div class="text-center">
+                        <p>
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="text-info text-decoration-none">Quên mật khẩu?</a>
+                        </p>
+                        <p>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-info text-decoration-none">Chưa có tài khoản? Đăng ký ngay</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        .custom-input {
+            background: rgba(15, 23, 42, 0.8) !important;
+            color: #f8fafc !important;
+            border: 1px solid rgba(148, 163, 184, 0.3) !important;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        .custom-input:focus {
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3) !important;
+            background: rgba(15, 23, 42, 0.95) !important;
+        }
+    </style>
+}
