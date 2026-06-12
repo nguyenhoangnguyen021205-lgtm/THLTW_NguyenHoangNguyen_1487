@@ -1,4 +1,4 @@
-@model List<WebsiteBanHang.Models.CartItem>
+@model WebsiteBanHang.Models.ShoppingCart
 @{
     ViewData["Title"] = "Giỏ Hàng";
 }
@@ -6,7 +6,18 @@
 <div class="container py-5 mt-5">
     <h2 class="text-white fw-bold mb-4 brand-font"><i class="bi bi-cart3 text-info me-2"></i>GIỎ HÀNG CỦA BẠN</h2>
 
-    @if (Model == null || !Model.Any())
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert bg-danger text-white border-0 shadow-lg rounded-3 mb-4 d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+            <div>
+                <strong>Opps!</strong> @TempData["ErrorMessage"]
+            </div>
+            <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Items.Any())
     {
         <div class="alert bg-dark border-info text-white-50 text-center py-5 rounded-4 shadow-lg">
             <i class="bi bi-cart-x fs-1 mb-3 d-block text-secondary"></i>
@@ -29,7 +40,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.Items)
                     {
                         <tr>
                             <td>
@@ -39,7 +50,20 @@
                                 </div>
                             </td>
                             <td class="text-center">@item.Price.ToString("#,##0") đ</td>
-                            <td class="text-center fw-bold">@item.Quantity</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    @if (item.Quantity > 1)
+                                    {
+                                        <a asp-action="DecreaseQuantity" asp-route-productId="@item.ProductId" class="btn btn-sm btn-outline-light rounded-circle" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;"><i class="bi bi-dash"></i></a>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-outline-secondary rounded-circle disabled" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; opacity: 0.5;"><i class="bi bi-dash"></i></button>
+                                    }
+                                    <span class="fw-bold" style="width: 30px;">@item.Quantity</span>
+                                    <a asp-action="IncreaseQuantity" asp-route-productId="@item.ProductId" class="btn btn-sm btn-outline-light rounded-circle" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;"><i class="bi bi-plus"></i></a>
+                                </div>
+                            </td>
                             <td class="text-center text-warning fw-bold">@item.Total.ToString("#,##0") đ</td>
                             <td class="text-center">
                                 <a asp-action="RemoveFromCart" asp-route-productId="@item.ProductId" class="btn btn-sm btn-outline-danger rounded-circle" title="Xóa"><i class="bi bi-x-lg"></i></a>
@@ -53,7 +77,7 @@
         <div class="d-flex justify-content-between align-items-center bg-dark p-4 rounded-4 shadow-lg border border-secondary">
             <div>
                 <span class="text-white-50 d-block mb-1">Tổng cộng:</span>
-                <h3 class="text-danger fw-bold m-0">@Model.Sum(x => x.Total).ToString("#,##0") đ</h3>
+                <h3 class="text-danger fw-bold m-0">@Model.Items.Sum(x => x.Total).ToString("#,##0") đ</h3>
             </div>
             <div class="d-flex gap-2">
                 <a asp-action="ClearCart" class="btn btn-outline-secondary px-4 fw-bold rounded-pill">Xóa Giỏ Hàng</a>

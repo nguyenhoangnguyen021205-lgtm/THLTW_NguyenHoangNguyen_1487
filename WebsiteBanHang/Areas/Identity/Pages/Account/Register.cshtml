@@ -14,13 +14,13 @@
 
                     <div class="row g-3 mb-3">
                         <div class="col-6">
-                            <label asp-for="Input.FirstName" class="form-label text-white fw-bold">First Name</label>
-                            <input asp-for="Input.FirstName" class="form-control custom-input rounded-3 text-white" aria-required="true" placeholder="First Name" />
+                            <label asp-for="Input.FirstName" class="form-label text-white fw-bold">Tên</label>
+                            <input asp-for="Input.FirstName" class="form-control custom-input rounded-3 text-white" aria-required="true" placeholder="Tên" />
                             <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                         </div>
                         <div class="col-6">
-                            <label asp-for="Input.LastName" class="form-label text-white fw-bold">Last Name</label>
-                            <input asp-for="Input.LastName" class="form-control custom-input rounded-3 text-white" aria-required="true" placeholder="Last Name" />
+                            <label asp-for="Input.LastName" class="form-label text-white fw-bold">Họ</label>
+                            <input asp-for="Input.LastName" class="form-control custom-input rounded-3 text-white" aria-required="true" placeholder="Họ" />
                             <span asp-validation-for="Input.LastName" class="text-danger"></span>
                         </div>
                     </div>
@@ -29,6 +29,12 @@
                         <label asp-for="Input.Email" class="form-label text-white fw-bold">Email</label>
                         <input asp-for="Input.Email" class="form-control custom-input rounded-3 text-white" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Input.PhoneNumber" class="form-label text-white fw-bold">Số điện thoại</label>
+                        <input asp-for="Input.PhoneNumber" class="form-control custom-input rounded-3 text-white" placeholder="Số điện thoại của bạn" />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
 
                     <div class="row g-3 mb-3">
@@ -44,16 +50,10 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label asp-for="Input.Address" class="form-label text-white fw-bold">Địa chỉ</label>
                         <input asp-for="Input.Address" class="form-control custom-input rounded-3 text-white" placeholder="123 Street, City" />
                         <span asp-validation-for="Input.Address" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="Input.Age" class="form-label text-white fw-bold">Tuổi</label>
-                        <input asp-for="Input.Age" class="form-control custom-input rounded-3 text-white" type="number" placeholder="20" />
-                        <span asp-validation-for="Input.Age" class="text-danger"></span>
                     </div>
 
                     <button id="registerSubmit" type="submit" class="w-100 btn btn-premium px-4 py-2 fs-5">Đăng Ký</button>

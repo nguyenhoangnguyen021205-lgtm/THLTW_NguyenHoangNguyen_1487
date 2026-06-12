@@ -39,8 +39,20 @@ namespace WebsiteBanHang.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Product product, IFormFile imageFile)
+        public async Task<IActionResult> Add(Product product, IFormFile? imageFile)
         {
+            ModelState.Remove("Category");
+            ModelState.Remove("Images");
+            ModelState.Remove("Rating");
+            ModelState.Remove("SalesCount");
+            ModelState.Remove("IsFeatured");
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = await _categoryRepo.GetAllAsync();
+                ViewBag.CategoryList = new SelectList(await _categoryRepo.GetAllAsync(), "Id", "Name");
+                return View(product);
+            }
             if (imageFile != null && imageFile.Length > 0)
             {
                 product.ImageUrl = await SaveImageAsync(imageFile);
@@ -69,9 +81,22 @@ namespace WebsiteBanHang.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Product product, IFormFile imageFile)
+        public async Task<IActionResult> Edit(int id, Product product, IFormFile? imageFile)
         {
             if (id != product.Id) return NotFound();
+
+            ModelState.Remove("Category");
+            ModelState.Remove("Images");
+            ModelState.Remove("Rating");
+            ModelState.Remove("SalesCount");
+            ModelState.Remove("IsFeatured");
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = await _categoryRepo.GetAllAsync();
+                ViewBag.CategoryList = new SelectList(await _categoryRepo.GetAllAsync(), "Id", "Name", product.CategoryId);
+                return View(product);
+            }
 
             var existingProduct = await _productRepo.GetByIdAsync(id);
             if (existingProduct == null) return NotFound();

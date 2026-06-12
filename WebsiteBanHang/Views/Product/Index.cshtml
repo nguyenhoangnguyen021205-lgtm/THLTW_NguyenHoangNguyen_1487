@@ -84,9 +84,18 @@
                 <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0">
                     <div class="d-flex gap-2">
                         <a asp-action="Display" asp-route-id="@item.Id" class="btn btn-outline-info w-50 fw-bold rounded-3 py-2">Chi Tiết</a>
-                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-productId="@item.Id" class="btn btn-warning text-dark fw-bold rounded-pill px-4 flex-grow-1 shadow">
-                            <i class="bi bi-cart-plus-fill me-1"></i>Mua ngay
-                        </a>
+                        @if (item.Stock > 0)
+                        {
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-productId="@item.Id" class="btn btn-warning text-dark fw-bold rounded-pill px-4 flex-grow-1 shadow">
+                                <i class="bi bi-cart-plus-fill me-1"></i>Mua ngay
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary text-white fw-bold rounded-pill px-4 flex-grow-1 shadow" disabled style="cursor: not-allowed;">
+                                <i class="bi bi-x-circle-fill me-1"></i>Hết hàng
+                            </button>
+                        }
                     </div>
                 </div>
             </div>

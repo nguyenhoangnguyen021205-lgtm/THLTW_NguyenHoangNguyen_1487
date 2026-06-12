@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
 namespace WebsiteBanHang.Models
@@ -11,8 +11,7 @@ namespace WebsiteBanHang.Models
         [StringLength(100, ErrorMessage = "Tên nhạc cụ không quá 100 ký tự")]
         public string? Name { get; set; }
 
-        // 🌟 FIX LỖI OVERFLOW: Chuyển đổi khoảng kiểm tra sang dạng double để không bị tràn Int32
-        [Range(1000.0, 1000000000.0, ErrorMessage = "Giá bán phải nằm trong khoảng từ 1,000 đ đến 1 tỷ đ")]
+        [Range(typeof(decimal), "1000", "1000000000", ErrorMessage = "Giá bán phải nằm trong khoảng từ 1,000 đ đến 1 tỷ đ")]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Mô tả sản phẩm không được để trống")]

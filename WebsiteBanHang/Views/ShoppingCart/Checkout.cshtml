@@ -6,10 +6,22 @@
 <div class="container py-5 mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            <div class="card form-card shadow-lg p-4 p-md-5">
+            <div class="card cyber-panel shadow-lg p-4 p-md-5 border-0" style="border-radius: 20px;">
                 <h3 class="text-white fw-bold mb-4 brand-font text-center"><i class="bi bi-credit-card-2-front text-warning me-2"></i>THÔNG TIN THANH TOÁN</h3>
                 
                 <form asp-action="Checkout" method="post">
+                    <div class="mb-4">
+                        <label asp-for="CustomerName" class="form-label text-white fw-bold"><i class="bi bi-person-badge me-1 text-primary"></i>Họ và Tên</label>
+                        <input asp-for="CustomerName" class="form-control bg-dark text-white border-secondary" placeholder="Nhập họ và tên người nhận..." required />
+                        <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="CustomerPhone" class="form-label text-white fw-bold"><i class="bi bi-telephone me-1 text-success"></i>Số Điện Thoại</label>
+                        <input asp-for="CustomerPhone" class="form-control bg-dark text-white border-secondary" placeholder="Nhập số điện thoại liên lạc..." required />
+                        <span asp-validation-for="CustomerPhone" class="text-danger small"></span>
+                    </div>
+
                     <div class="mb-4">
                         <label asp-for="ShippingAddress" class="form-label text-white fw-bold"><i class="bi bi-geo-alt me-1 text-info"></i>Địa Chỉ Giao Hàng</label>
                         <textarea asp-for="ShippingAddress" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Nhập địa chỉ nhận hàng chi tiết..." required></textarea>

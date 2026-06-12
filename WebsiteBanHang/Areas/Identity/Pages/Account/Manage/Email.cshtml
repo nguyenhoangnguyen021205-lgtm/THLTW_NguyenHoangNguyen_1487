@@ -1,0 +1,48 @@
+@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-10 col-lg-8">
+        <form id="email-form" method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            @if (Model.IsEmailConfirmed)
+            {
+                <div class="mb-4">
+                    <label asp-for="Email" class="form-label text-white fw-bold"><i class="bi bi-envelope-check me-2 text-success"></i>Email hiện tại (đã xác thực)</label>
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control bg-dark text-white border-success" disabled />
+                        <span class="input-group-text bg-success text-white border-success"><i class="bi bi-check-circle-fill"></i></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="mb-4">
+                    <label asp-for="Email" class="form-label text-white fw-bold"><i class="bi bi-envelope me-2 text-warning"></i>Email hiện tại (chưa xác thực)</label>
+                    <input asp-for="Email" class="form-control bg-dark text-white border-warning" disabled />
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link text-warning mt-2 p-0">Gửi lại email xác thực</button>
+                </div>
+            }
+            <div class="mb-4">
+                <label asp-for="Input.NewEmail" class="form-label text-white fw-bold"><i class="bi bi-envelope-plus me-2 text-info"></i>Email mới</label>
+                <input asp-for="Input.NewEmail" class="form-control bg-dark text-white border-secondary" autocomplete="email" aria-required="true" placeholder="Nhập địa chỉ email mới..." />
+                <span asp-validation-for="Input.NewEmail" class="text-danger small"></span>
+            </div>
+            <div class="mt-5">
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-warning text-dark fw-bold px-5 rounded-pill shadow">
+                    <i class="bi bi-arrow-repeat me-2"></i>Đổi Email
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

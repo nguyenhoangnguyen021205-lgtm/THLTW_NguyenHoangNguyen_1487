@@ -110,8 +110,10 @@ namespace WebsiteBanHang.Areas.Identity.Pages.Account
             [Display(Name = "Address")]
             public string Address { get; set; }
 
-            [Display(Name = "Age")]
-            public int? Age { get; set; }
+            [Required]
+            [Display(Name = "Phone Number")]
+            [Phone]
+            public string PhoneNumber { get; set; }
         }
 
 
@@ -132,7 +134,7 @@ namespace WebsiteBanHang.Areas.Identity.Pages.Account
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.Address = Input.Address;
-                user.Age = Input.Age;
+                user.PhoneNumber = Input.PhoneNumber;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

@@ -1,0 +1,28 @@
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<ul class="nav nav-pills flex-column cyber-nav gap-2">
+    <li class="nav-item"><a class="nav-link text-white fw-bold @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index"><i class="bi bi-person-lines-fill me-2"></i>Hồ sơ cá nhân</a></li>
+    <li class="nav-item"><a class="nav-link text-white fw-bold @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email"><i class="bi bi-envelope-at me-2"></i>Email</a></li>
+    <li class="nav-item"><a class="nav-link text-white fw-bold @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword"><i class="bi bi-shield-lock me-2"></i>Mật khẩu</a></li>
+    @if (hasExternalLogins)
+    {
+        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link text-white fw-bold @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập liên kết</a></li>
+    }
+</ul>
+
+<style>
+    .cyber-nav .nav-link {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    .cyber-nav .nav-link.active {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        color: white !important;
+    }
+    .cyber-nav .nav-link:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
+    }
+</style>

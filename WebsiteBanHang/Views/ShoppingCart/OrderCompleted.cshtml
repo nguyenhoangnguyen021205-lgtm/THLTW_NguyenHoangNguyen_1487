@@ -1,3 +1,4 @@
+@model int
 @{
     ViewData["Title"] = "Đặt Hàng Thành Công";
 }
@@ -6,7 +7,8 @@
     <div class="card bg-dark border-success shadow-lg p-5 rounded-4 mx-auto" style="max-width: 600px;">
         <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
         <h2 class="text-white fw-bold mt-4 brand-font">ĐẶT HÀNG THÀNH CÔNG!</h2>
-        <p class="text-white-50 mt-3 fs-5">Cảm ơn bạn đã mua sắm tại Melodia Studio. Đơn hàng của bạn đã được ghi nhận và đang chờ xử lý.</p>
+        <p class="text-white-50 mt-3 fs-5">Mã đơn hàng của bạn là: <strong>#@Model</strong></p>
+        <p class="text-white-50 mt-1 fs-5">Cảm ơn bạn đã mua sắm tại cửa hàng. Đơn hàng của bạn đã được ghi nhận và đang chờ xử lý.</p>
         
         <div class="mt-5">
             <a asp-controller="Product" asp-action="Index" class="btn btn-outline-info px-4 py-2 rounded-pill fw-bold">Tiếp Tục Mua Sắm</a>

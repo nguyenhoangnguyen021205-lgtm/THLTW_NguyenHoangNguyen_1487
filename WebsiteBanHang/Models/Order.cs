@@ -17,7 +17,15 @@ namespace WebsiteBanHang.Models
 
         public string Status { get; set; } = "Đang Xử Lý";
 
-        [Required, StringLength(100)]
+        [Required(ErrorMessage = "Vui lòng nhập họ tên")]
+        public string CustomerName { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
+        public string CustomerPhone { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập địa chỉ")]
+        [StringLength(100)]
         public string ShippingAddress { get; set; }
 
         public string Notes { get; set; }

@@ -1,0 +1,31 @@
+@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+    }
+}
+
+<div class="container py-5 mt-5">
+    <div class="card cyber-panel shadow-lg border-0 p-4 p-md-5" style="border-radius: 20px;">
+        <h2 class="text-white fw-bold brand-font mb-2"><i class="bi bi-person-gear text-info me-2"></i>QUẢN LÝ TÀI KHOẢN</h2>
+        <p class="text-white-50 mb-4 fs-5">Cập nhật thông tin cá nhân và bảo mật của bạn</p>
+        <hr class="border-secondary mb-5" />
+
+        <div class="row">
+            <div class="col-md-3 mb-4 mb-md-0">
+                <partial name="_ManageNav" />
+            </div>
+            <div class="col-md-9 pl-md-4">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

@@ -118,21 +118,21 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark neon-navbar py-3 sticky-top">
         <div class="container">
-            <a class="navbar-brand neon-brand" asp-controller="Product" asp-action="Index"><i class="bi bi-speakers-fill me-2"></i>SONIC CLUB</a>
+            <a class="navbar-brand neon-brand" asp-area="" asp-controller="Product" asp-action="Index"><i class="bi bi-speakers-fill me-2"></i>SONIC CLUB</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 gap-md-3">
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold active" asp-controller="Home" asp-action="Index">Trang Chủ</a>
+                        <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Product" asp-action="Index">Trang Chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold" asp-controller="Product" asp-action="Index">Showroom</a>
+                        <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Product" asp-action="Index">Showroom</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white fw-bold" asp-controller="ShoppingCart" asp-action="Index"><i class="bi bi-cart3 me-1"></i>Giỏ Hàng</a>
+                        <a class="nav-link text-white fw-bold" asp-area="" asp-controller="ShoppingCart" asp-action="Index"><i class="bi bi-cart3 me-1"></i>Giỏ Hàng</a>
                     </li>
                 </ul>
 
-                <form class="d-flex mx-lg-3 my-2 my-lg-0" asp-controller="Product" asp-action="Index" method="get">
+                <form class="d-flex mx-lg-3 my-2 my-lg-0" asp-area="" asp-controller="Product" asp-action="Index" method="get">
                     <input class="form-control form-control-sm me-2 fw-bold text-white" type="search" name="searchString" placeholder="Tìm kiếm..." style="max-width: 180px;">
                     <button class="btn btn-sm btn-premium px-3 shadow-sm rounded-3" type="submit"><i class="bi bi-search"></i></button>
                 </form>
@@ -155,12 +155,12 @@
             <div class="col-lg-3">
                 <div class="card cyber-panel overflow-hidden shadow">
                     <div class="p-3 text-center fw-bold text-uppercase bg-black text-neon-cyan font-monospace" style="font-size: 1.15rem; letter-spacing: 1px;">⚡ PHÂN LOẠI SẢN PHẨM</div>
-                    <a href="@Url.Action("Index", "Product")" class="cyber-link text-warning fw-bold">🌟 TẤT CẢ SẢN PHẨM</a>
+                    <a href="@Url.Action("Index", "Product", new { area = "" })" class="cyber-link text-warning fw-bold">🌟 TẤT CẢ SẢN PHẨM</a>
                     @if (ViewBag.Categories != null)
                     {
                         foreach (var cat in ViewBag.Categories)
                         {
-                            <a href="@Url.Action("Index", "Product", new { categoryId = cat.Id })" class="cyber-link">
+                            <a href="@Url.Action("Index", "Product", new { categoryId = cat.Id, area = "" })" class="cyber-link">
                                 🎵 @cat.Name
                             </a>
                         }
