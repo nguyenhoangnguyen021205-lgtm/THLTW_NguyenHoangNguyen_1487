@@ -125,13 +125,19 @@ namespace WebsiteBanHang.Areas.Admin.Controllers
         {
             var product = await _productRepo.GetByIdAsync(id);
             if (product == null) return NotFound();
-            return View(product);
-        }
 
-        [HttpPost, ActionName("DeleteConfirmed")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _productRepo.DeleteAsync(id);
+            try
+            {
+                await _productRepo.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                // Bắt lỗi nếu sản phẩm đang nằm trong đơn hàng (lỗi khóa ngoại)
+                TempData["ErrorMessage"] = "Không thể xóa nhạc cụ này vì nó đã có trong đơn hàng!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["SuccessMessage"] = "Đã xóa nhạc cụ thành công!";
             return RedirectToAction(nameof(Index));
         }
 

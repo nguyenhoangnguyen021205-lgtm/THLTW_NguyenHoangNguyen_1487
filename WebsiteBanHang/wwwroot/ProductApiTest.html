@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Sản phẩm bằng API</title>
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Quản lý Sản phẩm (RESTful API)</h2>
+
+        <!-- Nút thêm sản phẩm mới mở Modal -->
+        <button class="btn btn-primary mb-3" onclick="openAddModal()">Thêm Sản Phẩm Mới</button>
+
+        <!-- Bảng danh sách sản phẩm -->
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Giá</th>
+                    <th>Mô tả</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- Dữ liệu sẽ được render tại đây bằng JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Thêm/Sửa Sản Phẩm -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Thêm Sản Phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Tên Sản Phẩm <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Giá <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" class="form-control" id="productPrice" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productDesc" class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="productDesc" rows="3"></textarea>
+                        </div>
+
+                        <!-- Danh mục (Giả định categoryId = 1 cho đơn giản, có thể fetch từ API danh mục) -->
+                        <div class="mb-3">
+                            <label for="productCategory" class="form-label">Category ID</label>
+                            <input type="number" class="form-control" id="productCategory" value="1" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-success" onclick="saveProduct()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Bootstrap & JS Fetch API -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const apiUrl = 'https://localhost:7146/api/products'; // Thay đổi port này nếu project chạy port khác (xem trong launchSettings.json). Ở đây dùng relative path cho tiện nếu chung server.
+        const localApiUrl = '/api/products'; // Nếu chạy trực tiếp trên file HTML này thông qua VS Code Live Server thì dùng absolute URL. Nếu file HTML nằm trong wwwroot thì dùng relative path. Ở đây ta ưu tiên relative URL vì file ở trong wwwroot.
+        
+        let productModal;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            productModal = new bootstrap.Modal(document.getElementById('productModal'));
+            loadProducts();
+        });
+
+        // 1. ĐỌC - Lấy danh sách sản phẩm (GET)
+        function loadProducts() {
+            fetch(localApiUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    const tbody = document.getElementById('productTableBody');
+                    tbody.innerHTML = '';
+                    data.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${p.id}</td>
+                            <td>${p.name}</td>
+                            <td>${p.price.toLocaleString('vi-VN')} đ</td>
+                            <td>${p.description || ''}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" onclick="editProduct(${p.id})">Sửa</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id})">Xóa</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.error('Lỗi khi tải dữ liệu:', error));
+        }
+
+        // Mở modal để Thêm mới
+        function openAddModal() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('productModalLabel').innerText = 'Thêm Sản Phẩm';
+            productModal.show();
+        }
+
+        // 2. THÊM / CẬP NHẬT - (POST / PUT)
+        function saveProduct() {
+            const id = document.getElementById('productId').value;
+            const name = document.getElementById('productName').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const description = document.getElementById('productDesc').value;
+            const categoryId = parseInt(document.getElementById('productCategory').value);
+
+            if (!name || isNaN(price)) {
+                alert("Vui lòng nhập Tên và Giá hợp lệ!");
+                return;
+            }
+
+            const product = {
+                id: id ? parseInt(id) : 0,
+                name: name,
+                price: price,
+                description: description,
+                categoryId: categoryId
+            };
+
+            const isUpdate = id !== '';
+            const method = isUpdate ? 'PUT' : 'POST';
+            const url = isUpdate ? `${localApiUrl}/${id}` : localApiUrl;
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            })
+            .then(response => {
+                // Kiểm tra status code (201 Created, 204 NoContent, 200 OK)
+                if (response.ok) {
+                    alert(isUpdate ? 'Cập nhật thành công!' : 'Thêm mới thành công!');
+                    productModal.hide();
+                    loadProducts(); // Tải lại danh sách
+                } else {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi lưu sản phẩm:', error);
+                alert('Có lỗi xảy ra: ' + error.message);
+            });
+        }
+
+        // 3. ĐỌC 1 SẢN PHẨM & SỬA - Lấy chi tiết rồi gán vào Form (GET by Id)
+        function editProduct(id) {
+            fetch(`${localApiUrl}/${id}`)
+                .then(response => {
+                    if (response.status === 404) {
+                        alert("Không tìm thấy sản phẩm!");
+                        throw new Error('Not found');
+                    }
+                    if (!response.ok) throw new Error('Error');
+                    return response.json();
+                })
+                .then(product => {
+                    document.getElementById('productId').value = product.id;
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productDesc').value = product.description;
+                    document.getElementById('productCategory').value = product.categoryId;
+                    
+                    document.getElementById('productModalLabel').innerText = 'Sửa Sản Phẩm';
+                    productModal.show();
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+
+        // 4. XÓA - (DELETE)
+        function deleteProduct(id) {
+            if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) return;
+
+            fetch(`${localApiUrl}/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.status === 204 || response.status === 200) {
+                    alert('Xóa thành công!');
+                    loadProducts();
+                } else if (response.status === 404) {
+                    alert('Sản phẩm không tồn tại!');
+                } else {
+                    throw new Error('Lỗi không xác định');
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi xóa:', error);
+                alert('Lỗi khi xóa sản phẩm!');
+            });
+        }
+    </script>
+</body>
+</html>
